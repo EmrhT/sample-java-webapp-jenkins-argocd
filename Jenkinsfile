@@ -4,10 +4,15 @@ pipeline {
       label 'kubeagent'
     }
   }
+  
+  environment {
+    GITHUB_TOKEN = credentials('github-token')
+  }
+  
   stages {
     stage('Developer Cloned the Repo') {
       steps {
-        git url: 'https://github.com/EmrhT/sample-java-webapp-jenkins.git'
+        git url: 'https://github.com/EmrhT/sample-java-webapp-jenkins-argocd.git'
       }
     }
     stage('Developer Committed') {
@@ -55,21 +60,41 @@ pipeline {
           sh 'TRIVY_INSECURE=true trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT'
       }
     }
-    stage ('Deploy to K8S Test Namespace') {
+
+    stage('Clone Gitops Repo') {
       steps {
-        withCredentials([file(credentialsId: 'afa1a7c1-5e6c-4d9b-82cb-4293f5c144a3', variable: 'KUBECRED')]) {
-          sh 'mkdir ~/.kube'
-          sh 'cat $KUBECRED > ~/.kube/config'
-          sh 'cat deployment-test.yaml | sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" | kubectl apply -f -'
+        sh 'git clone -b feature-emrah https://github.com/EmrhT/gitops-argocd-projects.git'
+      }
+    }
+    
+   stage('Update Manifest') {
+      steps {
+        dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
+          sh 'cat deployment.yaml | sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g"'
         }
       }
     }
+    
+    stage('Commit & Push to Gitops Repo') {
+      steps {
+        dir("gitops-argocd/jenkins-demo") {
+          sh "git config --global user.email 'emrhtfn@gmail.com'"
+          sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects'
+          sh 'git checkout feature-emrah'
+          sh 'git add -A'
+          sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT"'
+          sh 'git push origin feature-emrah'
+        }
+      }
+    }
+    
     stage ('OWASP-ZAP Dynamic Scan') {
       steps {
           sh 'podman run --tls-verify=false -t harbor.example.com/mantislogic/zap2docker-stable:2.12.0 zap-baseline.py -t http://webapp-svc.sample-java-webapp-jenkins-test.svc.cluster.local:8080/Java_Webapp_Pipeline/rest/hello | tee owasp-results.txt || true'
           sh 'cat owasp-results.txt | egrep  "^FAIL-NEW: 0.*FAIL-INPROG: 0"'
       }
     }
+    
     stage ('Merge Feature Branch to Master') {
       steps {
         sh 'true'
