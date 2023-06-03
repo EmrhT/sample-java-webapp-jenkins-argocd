@@ -84,6 +84,7 @@ pipeline {
           sh 'git checkout feature-emrah'
           sh 'git add -A'
           sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT"'
+          sh "sleep 9999999"
           sh 'git push origin feature-emrah'
         }
       }
