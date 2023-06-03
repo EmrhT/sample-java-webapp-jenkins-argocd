@@ -82,7 +82,7 @@ pipeline {
           sh "git config --global user.email 'emrhtfn@gmail.com'"
           sh "git config --global user.name 'EmrhT'"
           sh 'echo $GITHUB_TOKEN'
-          sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects.git'
+          sh 'git remote set-url origin https://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects.git'
           sh 'git checkout feature-emrah'
           sh 'git add -A'
           sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT"'
