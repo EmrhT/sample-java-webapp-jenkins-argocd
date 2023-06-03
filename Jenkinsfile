@@ -10,7 +10,12 @@ pipeline {
   }
   
   stages {
-    stage('Developer Cloned the Repo') {
+    stage('Developer Pushed to Feature Branch') {
+      steps {
+        sh 'true'
+      }
+    }
+    stage('Cloned the Feature Branch') {
       steps {
         git url: 'https://github.com/EmrhT/sample-java-webapp-jenkins-argocd.git'
       }
