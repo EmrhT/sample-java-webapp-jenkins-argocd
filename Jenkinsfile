@@ -77,7 +77,7 @@ pipeline {
     
     stage('Commit & Push to Gitops Repo Feature Branch') {
       steps {
-        dir("gitops-argocd/jenkins-demo") {
+        dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
           sh "git config --global user.email 'emrhtfn@gmail.com'"
           sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects'
           sh 'git checkout feature-emrah'
