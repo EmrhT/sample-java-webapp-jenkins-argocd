@@ -16,6 +16,11 @@ pipeline {
         sh 'true'
       }
     }
+   stage('Jenkins Cloned the Feature Branch of Application Repo') {
+      steps {
+        sh 'true'
+      }
+    }
     stage('Build') {
       steps {
         script {
@@ -68,7 +73,7 @@ pipeline {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
           sh 'echo $GIT_COMMIT'
-          sh 'sed -i "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" deployment.yaml'
+          sh 'sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" ./.deployment.yaml > deployment.yaml'
         }
       }
     }
