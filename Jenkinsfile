@@ -17,12 +17,7 @@ pipeline {
     }
     stage('Cloned the Feature Branch') {
       steps {
-        git url: 'https://github.com/EmrhT/sample-java-webapp-jenkins-argocd.git'
-      }
-    }
-    stage('Developer Committed') {
-      steps {
-        sh 'true'
+        sh 'git clone -b feature-emrah https://github.com/EmrhT/sample-java-webapp-jenkins-argocd.git'
       }
     }
     stage('Build') {
