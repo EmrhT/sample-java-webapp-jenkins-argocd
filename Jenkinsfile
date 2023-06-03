@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Developer Pushed to Feature Branch of Application Repo') {
       steps {
-        echo $GITHUB_TOKEN
+        sh 'echo $GITHUB_TOKEN'
         sh 'true'
       }
     }
