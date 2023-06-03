@@ -15,7 +15,7 @@ pipeline {
         sh 'true'
       }
     }
-    stage('Cloned the Feature Branch of Application Repo') {
+    stage('Jenkins Cloned the Feature Branch of Application Repo') {
       steps {
         sh 'git clone -b feature-emrah https://github.com/EmrhT/sample-java-webapp-jenkins-argocd.git'
       }
