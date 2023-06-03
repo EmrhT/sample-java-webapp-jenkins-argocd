@@ -71,7 +71,7 @@ pipeline {
    stage('Update Manifest') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
-          sh 'cat deployment.yaml | sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g"'
+          sh 'sed -i "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" deployment.yaml'
         }
       }
     }
@@ -80,6 +80,7 @@ pipeline {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
           sh "git config --global user.email 'emrhtfn@gmail.com'"
+          sh 'echo $GITHUB_TOKEN'
           sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects'
           sh 'git checkout feature-emrah'
           sh 'git add -A'
