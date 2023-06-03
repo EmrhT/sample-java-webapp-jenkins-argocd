@@ -60,12 +60,14 @@ pipeline {
     stage('Clone Gitops Repo Feature Branch') {
       steps {
         sh 'git clone -b feature-emrah https://github.com/EmrhT/gitops-argocd-projects.git'
+        sh 'echo $GIT_COMMIT'
       }
     }
     
    stage('Update Manifest') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
+          sh 'echo $GIT_COMMIT'
           sh 'sed -i "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" deployment.yaml'
         }
       }
@@ -80,6 +82,7 @@ pipeline {
           sh 'git remote set-url origin https://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects.git'
           sh 'git checkout feature-emrah'
           sh 'git add -A'
+          sh 'echo $GIT_COMMIT'
           sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT" || true'
           sh 'git push origin feature-emrah'
         }
