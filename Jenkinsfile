@@ -10,12 +10,12 @@ pipeline {
   }
   
   stages {
-    stage('Developer Pushed to Feature Branch') {
+    stage('Developer Pushed to Feature Branch of Application Repo') {
       steps {
         sh 'true'
       }
     }
-    stage('Cloned the Feature Branch') {
+    stage('Cloned the Feature Branch of Application Repo') {
       steps {
         sh 'git clone -b feature-emrah https://github.com/EmrhT/sample-java-webapp-jenkins-argocd.git'
       }
@@ -61,7 +61,7 @@ pipeline {
       }
     }
 
-    stage('Clone Gitops Repo') {
+    stage('Clone Gitops Repo Feature Branch') {
       steps {
         sh 'git clone -b feature-emrah https://github.com/EmrhT/gitops-argocd-projects.git'
       }
@@ -75,7 +75,7 @@ pipeline {
       }
     }
     
-    stage('Commit & Push to Gitops Repo') {
+    stage('Commit & Push to Gitops Repo Feature Branch') {
       steps {
         dir("gitops-argocd/jenkins-demo") {
           sh "git config --global user.email 'emrhtfn@gmail.com'"
@@ -90,22 +90,21 @@ pipeline {
     
     stage ('OWASP-ZAP Dynamic Scan') {
       steps {
+          sh 'sleep 60'
           sh 'podman run --tls-verify=false -t harbor.example.com/mantislogic/zap2docker-stable:2.12.0 zap-baseline.py -t http://webapp-svc.sample-java-webapp-jenkins-test.svc.cluster.local:8080/Java_Webapp_Pipeline/rest/hello | tee owasp-results.txt || true'
           sh 'cat owasp-results.txt | egrep  "^FAIL-NEW: 0.*FAIL-INPROG: 0"'
       }
     }
     
-    stage ('Merge Feature Branch to Master') {
+    stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
         sh 'true'
       }
     }
-    stage ('Deploy to K8S Prod Namespace') {
+    
+    stage ('Merge Feature Branch to Master for Gitops Repo') {
       steps {
-        withCredentials([file(credentialsId: 'afa1a7c1-5e6c-4d9b-82cb-4293f5c144a3', variable: 'KUBECRED')]) {
-          sh 'cat $KUBECRED > ~/.kube/config'
-          sh 'cat deployment-prod.yaml | sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" | kubectl apply -f -'
-        }
+        sh 'true'
       }
     }
   }
