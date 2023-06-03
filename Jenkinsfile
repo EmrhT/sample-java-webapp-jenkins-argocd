@@ -78,6 +78,7 @@ pipeline {
     stage('Commit & Push to Gitops Repo Feature Branch') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
+          sh "sleep 9999999"
           sh "git config --global user.email 'emrhtfn@gmail.com'"
           sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects'
           sh 'git checkout feature-emrah'
