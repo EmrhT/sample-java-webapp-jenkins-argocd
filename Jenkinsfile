@@ -85,7 +85,7 @@ pipeline {
           sh 'git remote set-url origin https://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects.git'
           sh 'git checkout feature-emrah'
           sh 'git add -A'
-          sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT"'
+          sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT" || true'
           sh 'git push origin feature-emrah'
         }
       }
