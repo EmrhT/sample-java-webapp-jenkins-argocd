@@ -12,7 +12,6 @@ pipeline {
   stages {
     stage('Developer Pushed to Feature Branch of Application Repo') {
       steps {
-        sh 'echo $GITHUB_TOKEN'
         sh 'true'
       }
     }
@@ -61,23 +60,18 @@ pipeline {
           sh 'true || TRIVY_INSECURE=true trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT'
       }
     }
-
     stage('Clone Gitops Repo Feature Branch') {
       steps {
         sh 'git clone -b feature-emrah https://github.com/EmrhT/gitops-argocd-projects.git'
-        sh 'echo $GIT_COMMIT'
       }
     }
-    
-   stage('Update Manifest') {
+    stage('Update Manifest') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
-          sh 'echo $GIT_COMMIT'
           sh 'sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" ./.deployment.yaml > deployment.yaml'
         }
       }
-    }
-    
+    }  
     stage('Commit & Push to Gitops Repo Feature Branch') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
@@ -87,14 +81,12 @@ pipeline {
           sh 'git remote set-url origin https://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects.git'
           sh 'git checkout feature-emrah'
           sh 'git add -A'
-          sh 'echo $GIT_COMMIT'
           sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT" || true'
           sh 'cat deployment.yaml'
           sh 'git push origin feature-emrah'
         }
       }
     }
-    
     stage ('OWASP-ZAP Dynamic Scan') {
       steps {
           sh 'sleep 60'
@@ -102,19 +94,16 @@ pipeline {
           sh 'cat owasp-results.txt | egrep  "^FAIL-NEW: 0.*FAIL-INPROG: 0"'
       }
     }
-    
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
         sh 'true'
       }
     }
-    
     stage ('Merge Feature Branch to Master for Gitops Repo') {
       steps {
         sh 'true'
       }
     }
-    
     stage ('Delete Feature Branches for Both Repos ??? (auto???)') {
       steps {
         sh 'true'
