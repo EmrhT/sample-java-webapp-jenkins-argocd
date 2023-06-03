@@ -84,6 +84,7 @@ pipeline {
           sh 'git add -A'
           sh 'echo $GIT_COMMIT'
           sh 'git commit -am "Updated image version for Build with commit ID - $GIT_COMMIT" || true'
+          sh 'cat deployment.yaml'
           sh 'git push origin feature-emrah'
         }
       }
