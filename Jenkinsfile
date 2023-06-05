@@ -96,6 +96,7 @@ pipeline {
     }
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
+        sh 'sleep 999999999'
         sh 'true'
       }
     }
