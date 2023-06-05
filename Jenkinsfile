@@ -51,13 +51,16 @@ pipeline {
         sh "podman build --network=host -t harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT ."
         sh "podman login --tls-verify=false harbor.example.com -u admin -p $DOCKERHUB_PASS"
         sh "podman push --tls-verify=false harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT"
+        sh 'mkdir others'
       }
     }
     stage('Trivy Image Scan') {
       steps {
+        dir("others") {
           sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3'
           sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
           sh 'true || TRIVY_INSECURE=true trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT'
+        }
       }
     }
     stage('Clone Gitops Repo Feature Branch') {
@@ -89,13 +92,16 @@ pipeline {
     }
     stage ('OWASP-ZAP Dynamic Scan') {
       steps {
+        dir("others") {
           sh 'sleep 60'
           sh 'podman run --tls-verify=false -t harbor.example.com/mantislogic/zap2docker-stable:2.12.0 zap-baseline.py -t http://webapp-svc.sample-java-webapp-jenkins-argocd-feature.svc.cluster.local:8080/java_webapp_argocd/rest/hello | tee owasp-results.txt || true'
           sh 'cat owasp-results.txt | egrep  "^FAIL-NEW: 0.*FAIL-INPROG: 0"'
+        }
       }
     }
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
+        sh 'sleep 999999999'
         sh 'true'
       }
     }
