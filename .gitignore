@@ -45,3 +45,4 @@ project/plugins/project/
 # others 
 others/*
 others@tmp/*
+gitops-argocd-projects/*
