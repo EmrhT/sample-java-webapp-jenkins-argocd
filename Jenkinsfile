@@ -17,6 +17,7 @@ pipeline {
     }
    stage('Jenkins Cloned the Feature Branch of Application Repo') {
       steps {
+        sh 'echo This step was already executed in Declarative: Checkout SCM phase'
         sh 'true'
       }
     }
@@ -102,9 +103,10 @@ pipeline {
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
         sh 'echo "$GITHUB_TOKEN" > .githubtoken'
-        sh 'gh auth login --with-token .githubtoken'
+        sh 'gh auth login --with-token < .githubtoken'
         sh 'rm -rf .githubtoken'
-        sh 'sleep 999999999'
+        sh 'git checkout feature-emrah'
+        sh 'gh pr create -f'
         sh 'true'
       }
     }
