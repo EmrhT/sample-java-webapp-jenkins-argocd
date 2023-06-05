@@ -101,6 +101,9 @@ pipeline {
     }
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
+        sh 'echo "$GITHUB_TOKEN" > .githubtoken'
+        sh 'gh auth login --with-token .githubtoken'
+        sh 'rm -rf .githubtoken'
         sh 'sleep 999999999'
         sh 'true'
       }
