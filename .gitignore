@@ -24,6 +24,7 @@ build/resources
 build/test-results
 build/tmp
 .gradle
+build/*
 
 # Package Files #
 *.ear
