@@ -17,6 +17,7 @@ pipeline {
     }
    stage('Jenkins Cloned the Feature Branch of Application Repo') {
       steps {
+        sh 'echo This step was already executed in Declarative: Checkout SCM phase'
         sh 'true'
       }
     }
