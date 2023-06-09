@@ -102,6 +102,8 @@ pipeline {
     }
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
+        sh 'export GITHUB_TOKEN'
+        sh 'sleep 10000000'
         sh 'git checkout feature-emrah'
         sh 'gh pr create -f'
         sh 'true'
