@@ -102,12 +102,10 @@ pipeline {
     }
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
-        sh 'export GITHUB_TOKEN'
-        sh 'echo $GITHUB_TOKEN > .test1'
-        sh 'sleep 10000000'
+        sh 'echo $GITHUB_TOKEN | awk -F ":" '{print $2}' > .gh_token'
+        sh 'gh auth login --with-token < .gh_token'
         sh 'git checkout feature-emrah'
         sh 'gh pr create -f'
-        sh 'true'
       }
     }
     stage ('Merge Feature Branch to Master for Gitops Repo') {
