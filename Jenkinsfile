@@ -103,6 +103,7 @@ pipeline {
       steps {
         sh "echo $GITHUB_TOKEN | awk -F ':' '{print \$2}' > .gh_token"
         sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && git checkout feature-emrah && gh pr create -f'
+        sh 'sleep 999999'
         sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && gh pr merge'
       }
     }
