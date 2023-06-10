@@ -103,6 +103,7 @@ pipeline {
     stage ('Merge Feature Branch to Master for Application Repo') {
       steps {
         sh "echo $GITHUB_TOKEN | awk -F ':' '{print \$2}' > .gh_token"
+        sh 'sleep 99999999'
         sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && git checkout feature-emrah && gh pr create -f'
       }
     }
