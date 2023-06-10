@@ -104,6 +104,7 @@ pipeline {
         sh "echo $GITHUB_TOKEN | awk -F ':' '{print \$2}' > .gh_token"
         sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && git checkout feature-emrah && gh pr create -f'
         sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && gh pr merge -m'
+        sh 'rm -rf .gh_token'
       }
     }
     stage ('Merge Feature Branch to Master for Gitops Repo') {
@@ -112,6 +113,7 @@ pipeline {
           sh "echo $GITHUB_TOKEN | awk -F ':' '{print \$2}' > .gh_token"
           sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && git checkout feature-emrah && gh pr create -f'
           sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token && gh pr merge -m'
+          sh 'rm -rf .gh_token'
         }
       }
     }
