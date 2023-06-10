@@ -81,7 +81,6 @@ pipeline {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
           sh "git config --global user.email 'emrhtfn@gmail.com'"
           sh "git config --global user.name 'EmrhT'"
-          sh 'echo $GITHUB_TOKEN'
           sh 'git remote set-url origin https://$GITHUB_TOKEN@github.com/EmrhT/gitops-argocd-projects.git'
           sh 'git checkout feature-emrah'
           sh 'git add -A'
