@@ -106,6 +106,7 @@ pipeline {
         sh 'unset GITHUB_TOKEN && gh auth login --with-token < .gh_token'
         sh 'git checkout feature-emrah'
         sh 'gh pr create -f'
+        sh 'echo test'
       }
     }
     stage ('Merge Feature Branch to Master for Gitops Repo') {
