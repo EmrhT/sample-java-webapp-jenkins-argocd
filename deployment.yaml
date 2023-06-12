@@ -14,8 +14,32 @@ spec:
       labels:
         app: web-app
     spec:
+      serviceAccountName: example-sa
+      volumes:
+        - name: example-pvc
+          persistentVolumeClaim:
+            claimName: example-pvc
       containers:
         - image: harbor.example.com/mantislogic/sample-java-webapp-jenkins:{{GIT_COMMIT}}
+          env:
+            - name: KEY1
+              valueFrom:
+                configMapKeyRef:
+                  name: example-configmap
+                  key: KEY1
+            - name: KEY2
+              valueFrom:
+                configMapKeyRef:
+                  name: example-configmap
+                  key: KEY2
+            - name: SECRET_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: secret-with-vault
+                  key: apikey
+          volumeMounts:
+          - mountPath: "/tmp"
+            name: example-pvc
           livenessProbe:
             failureThreshold: 1
             httpGet:
