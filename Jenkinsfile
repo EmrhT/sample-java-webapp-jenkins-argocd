@@ -72,7 +72,7 @@ pipeline {
     stage('Update Manifest') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
-          sh 'sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" ./.deployment.yaml > deployment.yaml'
+          sh 'sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" ../../deployment.yaml > ./deployment.yaml'
         }
       }
     }  
