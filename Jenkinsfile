@@ -41,7 +41,7 @@ pipeline {
         script {
           def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
           withCredentials([string(credentialsId: 'sonar', variable: 'sonarLogin')]) {
-            sh "true || ${sonarqubeScannerHome}/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=java-webapp -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=JW -Dsonar.sources=build/classes/main/ -Dsonar.tests=build/classes/test/ -Dsonar.language=java"
+            sh "${sonarqubeScannerHome}/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=java-webapp -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=JW -Dsonar.sources=build/classes/main/ -Dsonar.tests=build/classes/test/ -Dsonar.language=java"
           }  
         }
       }
@@ -60,7 +60,7 @@ pipeline {
         dir("others") {
           sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3'
           sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
-          sh 'true || TRIVY_INSECURE=true trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT'
+          sh 'TRIVY_INSECURE=true trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL harbor.example.com/mantislogic/sample-java-webapp-jenkins:$GIT_COMMIT'
         }
       }
     }
@@ -93,9 +93,9 @@ pipeline {
     stage ('OWASP-ZAP Dynamic Scan') {
       steps {
         dir("others") {
-          sh 'true || sleep 60'
-          sh 'true || podman run --tls-verify=false -t harbor.example.com/mantislogic/zap2docker-stable:2.12.0 zap-baseline.py -t http://webapp-svc.sample-java-webapp-jenkins-argocd-feature.svc.cluster.local:8080/java_webapp_argocd/rest/hello | tee owasp-results.txt || true'
-          sh 'true || cat owasp-results.txt | egrep  "^FAIL-NEW: 0.*FAIL-INPROG: 0"'
+          sh 'sleep 60'
+          sh 'podman run --tls-verify=false -t harbor.example.com/mantislogic/zap2docker-stable:2.12.0 zap-baseline.py -t http://webapp-svc.sample-java-webapp-jenkins-argocd-feature.svc.cluster.local:8080/java_webapp_argocd/rest/hello | tee owasp-results.txt || true'
+          sh 'cat owasp-results.txt | egrep  "^FAIL-NEW: 0.*FAIL-INPROG: 0"'
         }
       }
     }
