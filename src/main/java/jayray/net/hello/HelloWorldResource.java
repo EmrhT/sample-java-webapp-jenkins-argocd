@@ -18,7 +18,7 @@ public class HelloWorldResource {
 		logger.info("sample info message");
 		logger.warn("sample warning message");
 		logger.error("sample error message");
-		return "HELLO WORLD13!!";
+		return "HELLO WORLD14!!";
 	}
 
 }
