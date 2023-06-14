@@ -5,6 +5,7 @@ metadata:
     app: web-app
   name: java-webapp
 spec:
+  revisionHistoryLimit: 0
   replicas: 1
   selector:
     matchLabels:
