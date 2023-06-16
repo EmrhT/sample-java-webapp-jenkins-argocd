@@ -69,7 +69,7 @@ pipeline {
         sh 'git clone -b feature-emrah https://github.com/EmrhT/gitops-argocd-projects.git'
       }
     }
-    stage('Update Manifest') {
+    stage('Update Deployment Manifest') {
       steps {
         dir("gitops-argocd-projects/sample-java-webapp-jenkins-argocd") {
           sh 'sed "s/{{GIT_COMMIT}}/$GIT_COMMIT/g" ../../deployment-template.yaml > ./deployment.yaml'
