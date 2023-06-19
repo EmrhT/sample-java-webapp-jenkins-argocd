@@ -1,4 +1,4 @@
-# Sample Java Webapp for Jenkins PoC
+# Sample Java Webapp for Jenkins and ArgoCD PoC
 A Jersey web framework hello world application developed by Jason Ray.
 Original source code is here --> https://github.com/jasonray/jersey-starterkit
 
